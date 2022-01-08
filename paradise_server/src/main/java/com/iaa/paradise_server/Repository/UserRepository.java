@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 @Repository
-public class UserRepository implements UserDao {
+public class UserRepository  {
 
 
     private HashOperations hashOperations;
@@ -17,12 +17,12 @@ public class UserRepository implements UserDao {
     public UserRepository(RedisTemplate redisTemplate) {
         this.hashOperations = redisTemplate.opsForHash();
     }
-    @Override
+
     public void create(User user) {
         hashOperations.put("USER", user.getUserId(), user);
 
     }
-    @Override
+
     public User get(String userId) {
         return (User) hashOperations.get("USER", userId);
     }
@@ -30,13 +30,14 @@ public class UserRepository implements UserDao {
     public Map<String, User> getAll(){
         return hashOperations.entries("USER");
     }
-    @Override
+
     public void update(User user) {
         hashOperations.put("USER", user.getUserId(), user);
 
     }
-    @Override
+
     public void delete(String userId) {
         hashOperations.delete("USER", userId);
     }
+
 }

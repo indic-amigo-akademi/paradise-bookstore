@@ -10,12 +10,12 @@ import lombok.*;
 //No @Entity concept here
 @Getter
 @Setter
-@ToString
 public class User implements Serializable {
 
 
         private Integer userId;
         private String userName;
+        private static final long serialVersionUID = 6529685098267757690L;
 
         public Integer getUserId() {
                 return userId;
@@ -47,6 +47,16 @@ public class User implements Serializable {
 
         public void setPassword(String password) {
                 this.password = password;
+        }
+
+        @Override
+        public String toString() {
+                return "User{" +
+                        "userId=" + userId +
+                        ", userName='" + userName + '\'' +
+                        ", email='" + email + '\'' +
+                        ", password='" + password + '\'' +
+                        '}';
         }
 
         private String email;
