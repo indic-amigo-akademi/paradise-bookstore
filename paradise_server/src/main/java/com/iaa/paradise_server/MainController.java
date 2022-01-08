@@ -45,16 +45,12 @@ public class MainController {
 		return str;
 
 	}
-	@RequestMapping("/login")
+	@GetMapping("/login")
 	public ModelAndView loginPage()
 	{
 		return new ModelAndView("login");
 	}
-	@RequestMapping("/registration")
-	public ModelAndView register()
-	{
-		return new ModelAndView("register");
-	}
+
 	@GetMapping("/home")
 	public String home() {
 		return "index";
