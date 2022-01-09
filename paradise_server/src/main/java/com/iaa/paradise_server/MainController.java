@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,36 +25,42 @@ public class MainController {
 		return "Hello from spring boot";
 	}
 
-	@PostMapping("/saveUser")
-	public String saveUser(@RequestBody User usr){
+	@GetMapping("/auth/register")
+	public ModelAndView register(){
+		return new ModelAndView("register");
+	}
+
+	@PostMapping(value = "/saveUser", consumes = {"application/x-www-form-urlencoded"})
+	public String saveUser(User usr){
 		System.out.println(usr.toString());
-		usrdao.create(usr);
-		return "User saved successfully";
+		usrdao.save(usr);
+		System.out.println("User saved successfully");
+		return "redirect:home";
 
 	}
 	@GetMapping("/getUsers")
 	@ResponseBody
 	public String getUser(User usr){
-		Map<String,User> m=usrdao.getAll();
-		String str="";
+		List<User> m=usrdao.findAll();
+		String str=m.toString();
 //		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //		List<> m2=m.values().stream().map(s-> s.getUserName()).collect(Collectors.toList());
-		for(User key:m.values()){
-			str+=key.toString();
-		}
 		System.out.println(str);
 		return str;
 
 	}
-	@GetMapping("/login")
+	@GetMapping("/auth/login")
 	public ModelAndView loginPage()
 	{
 		return new ModelAndView("login");
 	}
 
 	@GetMapping("/home")
-	public String home() {
-		return "index";
+	public ModelAndView home()
+	{  	ModelAndView m = new ModelAndView("index");
+		String user = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		m.addObject("User",user);
+		return m;
 	}
 
 

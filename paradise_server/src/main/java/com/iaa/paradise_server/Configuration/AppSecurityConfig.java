@@ -32,21 +32,21 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/saveUser","/login").permitAll()
+                .authorizeRequests().antMatchers("/saveUser","/auth/login","/auth/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/home", true)
                 .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                .logoutSuccessUrl("/auth/login?logout")
                 .permitAll()
                 .deleteCookies("JSESSIONID");
 
