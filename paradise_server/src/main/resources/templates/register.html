@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1>Registration page</h1>
-            <form th:action="@{/saveUser}" method="post">
+            <form th:action="@{/auth/register}" method="post">
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">Invalid userName or
                         password.</div>

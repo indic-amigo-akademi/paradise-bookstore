@@ -31,7 +31,7 @@ public class MainController {
 		return new ModelAndView("register");
 	}
 
-	@PostMapping(value = "/saveUser", consumes = {"application/x-www-form-urlencoded"})
+	@PostMapping(value = "/auth/register", consumes = {"application/x-www-form-urlencoded"})
 	public String saveUser(User usr){
 		System.out.println(usr.toString());
 		usr.setPassword(new BCryptPasswordEncoder().encode(usr.getPassword()));
