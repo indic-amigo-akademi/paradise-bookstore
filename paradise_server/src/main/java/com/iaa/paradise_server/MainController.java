@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class MainController {
 	@PostMapping(value = "/saveUser", consumes = {"application/x-www-form-urlencoded"})
 	public String saveUser(User usr){
 		System.out.println(usr.toString());
+		usr.setPassword(new BCryptPasswordEncoder().encode(usr.getPassword()));
 		usrdao.save(usr);
 		System.out.println("User saved successfully");
 		return "redirect:home";
