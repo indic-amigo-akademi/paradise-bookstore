@@ -7,7 +7,7 @@
 		"noImplicitThis": true,
 		"strictNullChecks": true,
 		"sourceMap": true,
-		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "node"
 	},
 	"include": ["src", "index.d.ts"]

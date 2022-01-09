@@ -67,40 +67,49 @@ export default class AppHeader extends React.Component<AppHeaderProps, AppHeader
 					}}
 				/>
 				<div className="AppHeader__right">
-					<Button>
+					<Button color="primary" className="AppHeader__Btn">
 						<Badge color="primary" badgeContent={0}>
 							<NotificationsIcon />
 						</Badge>
 						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Notifications' : ''}
 					</Button>
-					<Button>
+					<Button color="primary" className="AppHeader__Btn">
 						<Badge color="primary" badgeContent={5}>
 							<CartIcon />
 						</Badge>
 						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Cart' : ''}
 					</Button>
-					<Button
-						id="profile-button"
-						aria-controls={isOpenProfileMenu ? 'profile-menu' : undefined}
-						aria-haspopup="true"
-						aria-expanded={isOpenProfileMenu ? 'true' : undefined}
-						onClick={this.openProfileMenu.bind(this)}
-					>
-						<ProfileIcon />
-						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Profile' : ''}
-					</Button>
-					<Menu
-						id="profile-menu"
-						anchorEl={this.state.profileMenuAnchor}
-						open={isOpenProfileMenu}
-						onClose={this.closeProfileMenu.bind(this)}
-						MenuListProps={{
-							'aria-labelledby': 'basic-button',
-						}}
-					>
-						<MenuItem onClick={() => {}}>Register</MenuItem>
-						<MenuItem onClick={() => {}}>Login</MenuItem>
-					</Menu>
+
+					{this.state.deviceSize < DeviceSizeConstant.Mobile_L ? (
+						<React.Fragment>
+							<Button
+								className="AppHeader__Btn"
+								color="primary"
+								id="profile-button"
+								aria-controls={isOpenProfileMenu ? 'profile-menu' : undefined}
+								aria-haspopup="true"
+								aria-expanded={isOpenProfileMenu ? 'true' : undefined}
+								onClick={this.openProfileMenu.bind(this)}
+							>
+								<ProfileIcon />
+								{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Profile' : ''}
+							</Button>
+							<Menu
+								id="profile-menu"
+								anchorEl={this.state.profileMenuAnchor}
+								open={isOpenProfileMenu}
+								onClose={this.closeProfileMenu.bind(this)}
+								MenuListProps={{
+									'aria-labelledby': 'basic-button',
+								}}
+							>
+								<MenuItem onClick={() => {}}>Register</MenuItem>
+								<MenuItem onClick={() => {}}>Login</MenuItem>
+							</Menu>
+						</React.Fragment>
+					) : (
+						<></>
+					)}
 				</div>
 			</header>
 		);
