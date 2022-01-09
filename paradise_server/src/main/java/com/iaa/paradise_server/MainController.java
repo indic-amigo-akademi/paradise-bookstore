@@ -37,7 +37,7 @@ public class MainController {
 		usr.setPassword(new BCryptPasswordEncoder().encode(usr.getPassword()));
 		usrdao.save(usr);
 		System.out.println("User saved successfully");
-		return "redirect:home";
+		return "redirect:/auth/login";
 
 	}
 	@GetMapping("/getUsers")
