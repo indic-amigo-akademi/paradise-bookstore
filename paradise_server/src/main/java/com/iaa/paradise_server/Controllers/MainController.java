@@ -1,4 +1,4 @@
-package com.iaa.paradise_server;
+package com.iaa.paradise_server.Controllers;
 
 import com.iaa.paradise_server.Entity.User;
 import com.iaa.paradise_server.Repository.UserRepository;
@@ -57,12 +57,19 @@ public class MainController {
 		return new ModelAndView("login");
 	}
 
-	@GetMapping("/home")
-	public ModelAndView home()
-	{  	ModelAndView m = new ModelAndView("index");
+	@GetMapping("/auth/verify")
+	public String verify()
+	{
 		String user = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-		m.addObject("User",user);
-		return m;
+		return user;
+
+	}
+
+	@GetMapping("/home")
+	public String home()
+	{
+		String user = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		return user;
 	}
 
 
