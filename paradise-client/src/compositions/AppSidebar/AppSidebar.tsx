@@ -13,12 +13,16 @@ import {
 } from '@mui/icons-material';
 
 import './AppSidebar.scss';
-import { Box } from '@mui/material';
+import { Box, Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { DeviceSize, DeviceSizeConstant } from '../../types/DeviceSize';
 
 type AppSidebarProps = {
 	isOpen: boolean;
 	toggleSidebar: () => void;
+	isLoginOpen: boolean;
+	isRegisterOpen: boolean;
+	toggleLoginModal: (value: boolean) => void;
+	toggleRegisterModal: (value: boolean) => void;
 };
 type AppSidebarState = {
 	deviceSize: DeviceSizeConstant;
@@ -52,39 +56,7 @@ export default class AppSidebar extends React.Component<AppSidebarProps, AppSide
 					<img src={logo} alt="logo" />
 					{this.props.isOpen ? 'Paradise Bibliothecca' : ''}
 				</div>
-				<nav className="AppSidebar_Navbar">
-					{this.state.deviceSize >= DeviceSizeConstant.Mobile_L ? (
-						<ul>
-							<li
-								className="AppSidebar_Navitem"
-								title="Profile"
-								onClick={() => {
-									this.toggleProfileMenu();
-								}}
-							>
-								<ProfileIcon />{' '}
-								{this.props.isOpen ? (
-									<>
-										Profile
-										{this.state.showProfileMenu ? <CollapseIcon /> : <ExpandIcon />}
-									</>
-								) : (
-									<></>
-								)}
-							</li>
-							<span
-								className={
-									'AppSidebar_AccordionSummary' +
-									(this.state.showProfileMenu ? '' : ' AppSidebar_Accordion_Close')
-								}
-							>
-								<li className="AppSidebar_Navitem">Register</li>
-								<li className="AppSidebar_Navitem">Login</li>
-							</span>
-						</ul>
-					) : (
-						<></>
-					)}
+				{/* <nav className="AppSidebar_Navbar">
 					<ul>
 						<li className="AppSidebar_Navitem" title="Home">
 							<HomeIcon /> {this.props.isOpen ? 'Home' : ''}
@@ -106,7 +78,72 @@ export default class AppSidebar extends React.Component<AppSidebarProps, AppSide
 							{this.props.isOpen ? 'Recommended' : ''}
 						</li>
 					</ul>
-				</nav>
+				</nav> */}
+				<List component="nav" className="AppSidebar_Navbar" sx={{ bgcolor: 'primary.main' }} disablePadding>
+					{this.state.deviceSize >= DeviceSizeConstant.Mobile_L ? (
+						<React.Fragment>
+							<ListItemButton
+								onClick={() => {
+									this.toggleProfileMenu();
+								}}
+							>
+								<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+									<ProfileIcon />
+								</ListItemIcon>
+								{this.props.isOpen ? (
+									<React.Fragment>
+										<ListItemText primary="Profile" />
+										{this.state.showProfileMenu ? <CollapseIcon /> : <ExpandIcon />}
+									</React.Fragment>
+								) : (
+									''
+								)}
+							</ListItemButton>
+							<Collapse in={this.state.showProfileMenu} timeout="auto" unmountOnExit>
+								<List component="div" disablePadding>
+									<ListItemButton sx={{ pl: 4 }}>
+										<ListItemText primary="Register" />
+									</ListItemButton>
+									<ListItemButton sx={{ pl: 4 }}>
+										<ListItemText primary="Login" />
+									</ListItemButton>
+								</List>
+							</Collapse>
+						</React.Fragment>
+					) : (
+						<></>
+					)}
+					<ListItem className="AppSidebar_Navitem">
+						<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+							<HomeIcon />
+						</ListItemIcon>
+						{this.props.isOpen ? <ListItemText primary="Home" /> : ''}
+					</ListItem>
+					<ListItem className="AppSidebar_Navitem">
+						<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+							<LibraryIcon />
+						</ListItemIcon>
+						{this.props.isOpen ? <ListItemText primary="Library" /> : ''}
+					</ListItem>
+					<ListItemButton className="AppSidebar_Navitem">
+						<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+							<CategoryIcon />
+						</ListItemIcon>
+						{this.props.isOpen ? <ListItemText primary="Categories" /> : ''}
+					</ListItemButton>
+					<ListItemButton className="AppSidebar_Navitem">
+						<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+							<AuthorsIcon />
+						</ListItemIcon>
+						{this.props.isOpen ? <ListItemText primary="Authors" /> : ''}
+					</ListItemButton>
+					<ListItemButton className="AppSidebar_Navitem">
+						<ListItemIcon sx={{ color: 'primary.contrastText', minWidth: 30 }}>
+							<StarIcon />
+						</ListItemIcon>
+						{this.props.isOpen ? <ListItemText primary="Recommended" /> : ''}
+					</ListItemButton>
+				</List>
 			</Box>
 		);
 	}

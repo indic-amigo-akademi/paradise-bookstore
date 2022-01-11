@@ -30,15 +30,4 @@
             }
         }
     }
-
-    .AppSidebar_AccordionTitle {}
-
-    .AppSidebar_AccordionSummary {
-        display: block;
-        padding-left: 2rem;
-
-        &.AppSidebar_Accordion_Close {
-            display: none;
-        }
-    }
 }
