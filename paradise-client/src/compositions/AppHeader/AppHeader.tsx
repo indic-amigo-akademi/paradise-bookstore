@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Badge, Button, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
+import { Badge, Box, Button, InputAdornment, Menu, MenuItem, TextField } from '@mui/material';
 import {
 	AccountCircleOutlined as ProfileIcon,
 	NotificationsOutlined as NotificationsIcon,
@@ -12,7 +12,12 @@ import { DeviceSize, DeviceSizeConstant } from '../../types/DeviceSize';
 
 import './AppHeader.scss';
 
-type AppHeaderProps = {};
+type AppHeaderProps = {
+	isLoginOpen: boolean;
+	isRegisterOpen: boolean;
+	toggleLoginModal: (value: boolean) => void;
+	toggleRegisterModal: (value: boolean) => void;
+};
 type AppHeaderState = {
 	search: String;
 	deviceSize: DeviceSizeConstant;
@@ -26,9 +31,7 @@ export default class AppHeader extends React.Component<AppHeaderProps, AppHeader
 		profileMenuAnchor: null,
 	};
 
-	componentDidMount(): void {
-		console.log(this.state.deviceSize);
-	}
+	componentDidMount(): void {}
 
 	searchSubmitForm(): void {
 		console.log(this.state.search);
@@ -66,42 +69,67 @@ export default class AppHeader extends React.Component<AppHeaderProps, AppHeader
 						),
 					}}
 				/>
-				<div className="AppHeader__right">
-					<Button>
+				<Box className="AppHeader__right">
+					<Button color="primary" className="AppHeader__Btn" sx={{ minWidth: 'unset' }}>
 						<Badge color="primary" badgeContent={0}>
 							<NotificationsIcon />
 						</Badge>
 						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Notifications' : ''}
 					</Button>
-					<Button>
+					<Button color="primary" className="AppHeader__Btn" sx={{ minWidth: 'unset' }}>
 						<Badge color="primary" badgeContent={5}>
 							<CartIcon />
 						</Badge>
 						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Cart' : ''}
 					</Button>
-					<Button
-						id="profile-button"
-						aria-controls={isOpenProfileMenu ? 'profile-menu' : undefined}
-						aria-haspopup="true"
-						aria-expanded={isOpenProfileMenu ? 'true' : undefined}
-						onClick={this.openProfileMenu.bind(this)}
-					>
-						<ProfileIcon />
-						{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Profile' : ''}
-					</Button>
-					<Menu
-						id="profile-menu"
-						anchorEl={this.state.profileMenuAnchor}
-						open={isOpenProfileMenu}
-						onClose={this.closeProfileMenu.bind(this)}
-						MenuListProps={{
-							'aria-labelledby': 'basic-button',
-						}}
-					>
-						<MenuItem onClick={() => {}}>Register</MenuItem>
-						<MenuItem onClick={() => {}}>Login</MenuItem>
-					</Menu>
-				</div>
+
+					{this.state.deviceSize < DeviceSizeConstant.Mobile_L ? (
+						<React.Fragment>
+							<Button
+								className="AppHeader__Btn"
+								color="primary"
+								id="profile-button"
+								aria-controls={isOpenProfileMenu ? 'profile-menu' : undefined}
+								aria-haspopup="true"
+								aria-expanded={isOpenProfileMenu ? 'true' : undefined}
+								onClick={this.openProfileMenu.bind(this)}
+								sx={{ minWidth: 'unset' }}
+							>
+								<ProfileIcon />
+								{this.state.deviceSize < DeviceSizeConstant.Tablet ? 'Profile' : ''}
+							</Button>
+							<Menu
+								id="profile-menu"
+								anchorEl={this.state.profileMenuAnchor}
+								open={isOpenProfileMenu}
+								onClose={this.closeProfileMenu.bind(this)}
+								MenuListProps={{
+									'aria-labelledby': 'basic-button',
+								}}
+							>
+								<MenuItem
+									sx={{
+										color: 'primary.main',
+									}}
+									onClick={() =>{ this.closeProfileMenu();
+									this.props.toggleRegisterModal(!this.props.isRegisterOpen);}}
+								>
+									Register
+								</MenuItem>
+								<MenuItem
+									sx={{
+										color: 'primary.main',
+									}}
+									onClick={() => {}}
+								>
+									Login
+								</MenuItem>
+							</Menu>
+						</React.Fragment>
+					) : (
+						<></>
+					)}
+				</Box>
 			</header>
 		);
 	}
