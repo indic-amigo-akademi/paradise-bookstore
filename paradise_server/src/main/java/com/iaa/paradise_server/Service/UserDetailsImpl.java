@@ -1,4 +1,4 @@
-package com.iaa.paradise_server;
+package com.iaa.paradise_server.Service;
 
 import com.iaa.paradise_server.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.iaa.paradise_server;
 
 import com.iaa.paradise_server.Entity.User;
 import com.iaa.paradise_server.Repository.UserRepository;
+import com.iaa.paradise_server.Service.WebCrawlerSvc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 public class MainController {
 	@Autowired
 	UserRepository usrdao;
+	@Autowired
+	WebCrawlerSvc websvc;
 	@GetMapping(value="/",produces = MediaType.TEXT_HTML_VALUE)
 	@ResponseBody
 	public String index() {
@@ -63,6 +67,12 @@ public class MainController {
 		String user = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		m.addObject("User",user);
 		return m;
+	}
+	@GetMapping("/geturls/{url}")
+	public void geturls(@PathVariable String url)
+	{  	System.out.println(url);
+		websvc.startCrawling(url);
+
 	}
 
 

@@ -1,14 +1,14 @@
-package com.iaa.paradise_server;
+package com.iaa.paradise_server.Service;
 
 import com.iaa.paradise_server.Entity.User;
 import com.iaa.paradise_server.Repository.UserRepository;
+import com.iaa.paradise_server.Service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 @Service
 public class UsrDetSvc implements UserDetailsService {
     @Autowired
