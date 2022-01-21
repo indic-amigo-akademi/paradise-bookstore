@@ -1,13 +1,12 @@
 package com.iaa.paradise_server.Service;
 
+import java.util.Collection;
+
 import com.iaa.paradise_server.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
     User user;
@@ -17,7 +16,6 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
@@ -29,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return user.getUsername();
     }
 
     @Override
