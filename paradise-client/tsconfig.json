@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "ES2015",
+		"jsx": "react",
+		"lib": ["es6", "dom"],
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"strictNullChecks": true,
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node"
+	},
+	"include": ["src", "index.d.ts"]
+}

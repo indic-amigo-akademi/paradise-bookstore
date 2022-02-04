@@ -1,0 +1,24 @@
+.AppHeader {
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+
+    .AppHeader__search {
+        margin-right: auto;
+        width: 60%;
+    }
+
+    .AppHeader__right {
+        display: flex;
+    }
+}
+
+
+@media only screen and (max-width: 425px) {
+    .AppHeader__right {
+        .AppHeader__Btn {
+            display: block;
+            padding: 0.25rem;
+        }
+    }
+}
