@@ -56,7 +56,7 @@ public class MainController implements WebMvcConfigurer {
         if (result.hasErrors()) {
             JSONObject errors = new JSONObject();
             result.getFieldErrors().forEach((err) -> {
-                errors.put(err.getField(), err.getDefaultMessage());
+                errors.put(err.getField(), err.getDefaultMessage().split("\\|\\|"));
             });
             res.put("success", false);
             res.put("message", errors);

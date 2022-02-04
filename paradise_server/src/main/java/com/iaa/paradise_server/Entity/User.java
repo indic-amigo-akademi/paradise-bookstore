@@ -34,10 +34,10 @@ public class User implements Serializable {
     private String id;
     private static final long serialVersionUID = 6529685098267757690L;
     @NotEmpty(message = "{validation.username.NotEmpty}")
-    @Size(min = 6, max = 30, message = "{validation.username.Size}")
+    @Size(min = 6, max = 64, message = "{validation.username.Size}")
     @Unique(message = "{validation.username.Unique}", service = FieldValueExists.class, fieldName = "username")
     private String username;
-    @Size(min = 3, max = 64, message = "{validation.name.Size}")
+    @Size(min = 3, max = 256, message = "{validation.name.Size}")
     private String name;
     @NotEmpty(message = "{validation.email.NotEmpty}")
     @Email(message = "{validation.email.Type}")

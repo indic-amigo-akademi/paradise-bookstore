@@ -24,7 +24,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
     public boolean isValid(String password, ConstraintValidatorContext context) {
         PasswordValidator validator = new PasswordValidator(
                 Arrays.asList(
-                        new LengthRule(8, 30),
+                        new LengthRule(8, 64),
                         new CharacterRule(EnglishCharacterData.UpperCase, 1),
                         new CharacterRule(EnglishCharacterData.LowerCase, 1),
                         new CharacterRule(EnglishCharacterData.Special, 1),
@@ -39,7 +39,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
             return true;
 
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(String.join(",", validator.getMessages(result)))
+        context.buildConstraintViolationWithTemplate(String.join("||", validator.getMessages(result)))
                 .addConstraintViolation()
                 .disableDefaultConstraintViolation();
 
