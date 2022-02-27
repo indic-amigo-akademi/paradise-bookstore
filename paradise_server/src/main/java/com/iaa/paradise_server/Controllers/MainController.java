@@ -3,6 +3,7 @@ package com.iaa.paradise_server.Controllers;
 import com.iaa.paradise_server.Entity.User;
 import com.iaa.paradise_server.Repository.UserRepository;
 
+import com.iaa.paradise_server.Service.BookCollectorSvc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.JSONObject;
@@ -27,11 +28,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 @Controller
 public class MainController implements WebMvcConfigurer {
     @Autowired
     UserRepository usrdao;
+    @Autowired
+    BookCollectorSvc bsvc;
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
@@ -140,6 +144,10 @@ public class MainController implements WebMvcConfigurer {
         String user = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                 .getUsername();
         return user;
+    }
+    @GetMapping("/home/ebooks/{name}")
+    public void getBooks(@PathVariable String name) {
+        bsvc.downloadBook(name);
     }
 
 }
