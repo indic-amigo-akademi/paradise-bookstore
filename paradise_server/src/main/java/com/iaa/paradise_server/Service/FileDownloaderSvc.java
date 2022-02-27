@@ -54,12 +54,9 @@ public class FileDownloaderSvc {
                 public FileOutputStream onCompleted(Response response)
                         throws Exception {
                     System.out.println("File Downloaded");
-                    System.out.println(FILE_NAME+FILE_URL);
-                    String title = FILE_NAME.substring(FILE_NAME.lastIndexOf('\\') + 1);
-                    String id = FILE_URL.substring(FILE_URL.lastIndexOf('/') + 1);
-                    id=id.replace(".txt","");
-                    title=title.replace(".txt","");
-                    System.out.println(id+title);
+
+                    String title = FILE_NAME.substring(FILE_NAME.lastIndexOf('\\') + 1).replace(".txt","");
+                    String id = FILE_URL.substring(FILE_URL.lastIndexOf('/') + 1).replace(".txt","");
                     List<String[]> arr=new ArrayList<>();
                     arr.add(new String[]{id,title});
                     cutils.csvWriterOneByOne((List<String[]>) arr,cachedLoc);
