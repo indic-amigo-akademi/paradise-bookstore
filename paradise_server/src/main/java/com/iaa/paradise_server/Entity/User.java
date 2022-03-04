@@ -32,7 +32,6 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
-    private static final long serialVersionUID = 6529685098267757690L;
     @NotEmpty(message = "{validation.username.NotEmpty}")
     @Size(min = 6, max = 64, message = "{validation.username.Size}")
     @Unique(message = "{validation.username.Unique}", service = FieldValueExists.class, fieldName = "username")
