@@ -1,8 +1,8 @@
-package com.iaa.paradise_server.Service;
+package com.iaa.paradise_server.service;
 
 import java.util.Collection;
 
-import com.iaa.paradise_server.Entity.User;
+import com.iaa.paradise_server.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

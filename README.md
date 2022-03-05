@@ -18,6 +18,11 @@
 
     `mvn exec:java -Dexec.mainClass=com.iaa.paradise_server.ParadiseApplication`
 
+  or
+
+  - Install and run the server
+    `mvn spring-boot:run`
+
 - For frontend
   - Move into paradise/paradise-client
 

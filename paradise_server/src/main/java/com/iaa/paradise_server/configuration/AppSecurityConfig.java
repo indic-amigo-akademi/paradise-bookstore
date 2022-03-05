@@ -1,6 +1,7 @@
-package com.iaa.paradise_server.Configuration;
+package com.iaa.paradise_server.configuration;
 
-import com.iaa.paradise_server.Repository.UserRepository;
+import com.iaa.paradise_server.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/auth/login", "/auth/register","/home/ebooks/**").permitAll()
+                .authorizeRequests().antMatchers("/auth/login", "/auth/register", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

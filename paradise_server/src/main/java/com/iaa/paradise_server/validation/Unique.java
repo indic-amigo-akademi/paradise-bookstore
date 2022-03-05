@@ -1,4 +1,4 @@
-package com.iaa.paradise_server.Validation;
+package com.iaa.paradise_server.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

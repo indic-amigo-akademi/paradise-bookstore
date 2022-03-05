@@ -1,9 +1,9 @@
-package com.iaa.paradise_server.Controllers;
+package com.iaa.paradise_server.controller;
 
-import com.iaa.paradise_server.Entity.User;
-import com.iaa.paradise_server.Repository.UserRepository;
+import com.iaa.paradise_server.entity.User;
+import com.iaa.paradise_server.repository.UserRepository;
 
-import com.iaa.paradise_server.Service.BookCollectorSvc;
+import com.iaa.paradise_server.service.ebook.GutenbergService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.JSONObject;
@@ -34,8 +34,6 @@ import javax.websocket.server.PathParam;
 public class MainController implements WebMvcConfigurer {
     @Autowired
     UserRepository usrdao;
-    @Autowired
-    BookCollectorSvc bsvc;
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
@@ -109,7 +107,7 @@ public class MainController implements WebMvcConfigurer {
         }
     }
 
-    @GetMapping("/getUsers")
+    @GetMapping("/get_users")
     @ResponseBody
     public String getUsers(User usr) {
         logger.info("Starting MainController.getUsers");
@@ -145,9 +143,4 @@ public class MainController implements WebMvcConfigurer {
                 .getUsername();
         return user;
     }
-    @GetMapping("/home/ebooks/{name}")
-    public void getBooks(@PathVariable String name) {
-        bsvc.downloadBook(name);
-    }
-
 }

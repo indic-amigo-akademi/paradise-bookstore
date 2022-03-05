@@ -7,13 +7,13 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.4</version>
         <relativePath/>
-        <!-- lookup parent from repository -->
     </parent>
     <groupId>com.iaa</groupId>
     <artifactId>paradise_server</artifactId>
     <version>0.0.1</version>
     <name>paradise_server</name>
     <description>A Spring Boot RESTFUL API server for Paradise Bibliothecca</description>
+
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -36,10 +36,6 @@
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
             <version>2.12.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

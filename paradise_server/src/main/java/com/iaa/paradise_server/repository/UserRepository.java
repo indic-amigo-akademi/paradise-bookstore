@@ -1,6 +1,6 @@
-package com.iaa.paradise_server.Repository;
+package com.iaa.paradise_server.repository;
 
-import com.iaa.paradise_server.Entity.User;
+import com.iaa.paradise_server.entity.User;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

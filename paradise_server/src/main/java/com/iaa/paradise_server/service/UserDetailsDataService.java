@@ -1,8 +1,8 @@
-package com.iaa.paradise_server.Service;
+package com.iaa.paradise_server.service;
 
-import com.iaa.paradise_server.Entity.User;
-import com.iaa.paradise_server.Repository.UserRepository;
-import com.iaa.paradise_server.Validation.FieldValueExists;
+import com.iaa.paradise_server.entity.User;
+import com.iaa.paradise_server.repository.UserRepository;
+import com.iaa.paradise_server.validation.FieldValueExists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.iaa.paradise_server.Entity;
+package com.iaa.paradise_server.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,9 +19,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import com.iaa.paradise_server.Validation.FieldValueExists;
-import com.iaa.paradise_server.Validation.Unique;
-import com.iaa.paradise_server.Validation.ValidPassword;
+import com.iaa.paradise_server.validation.FieldValueExists;
+import com.iaa.paradise_server.validation.Unique;
+import com.iaa.paradise_server.validation.ValidPassword;
 
 @Entity
 @Data
@@ -48,4 +48,6 @@ public class User implements Serializable {
     @Past(message = "{validation.birthDate.Past}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
+    public void setPassword(String encode) {
+    }
 }
