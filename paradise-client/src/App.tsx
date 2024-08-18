@@ -1,12 +1,12 @@
 import React from 'react';
 
-import AppHeader from './compositions/AppHeader/AppHeader';
-import AppView from './compositions/AppView/AppView';
-import AppFooter from './compositions/AppFooter/AppFooter';
-import AppSidebar from './compositions/AppSidebar/AppSidebar';
+import AppHeader from '@/compositions/AppHeader/AppHeader';
+import AppView from '@/compositions/AppView/AppView';
+import AppFooter from '@/compositions/AppFooter/AppFooter';
+import AppSidebar from '@/compositions/AppSidebar/AppSidebar';
 
 import './App.scss';
-import RegisterModal from './components/RegisterModal/RegisterModal';
+import RegisterModal from '@/components/RegisterModal/RegisterModal';
 
 type AppState = {
 	isSidebarOpen: boolean;
