@@ -20,6 +20,6 @@ export default defineConfig({
         }
     },
     build: {
-        outDir: path.join(path.dirname(__dirname), "paradise_server", "dist")
+        outDir: path.join(path.dirname(__dirname), "paradise_server", "src", "main", "resources", "dist")
     }
 });

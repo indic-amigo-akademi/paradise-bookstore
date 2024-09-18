@@ -1,26 +1,35 @@
-package iaa.paradise.paradise_server.model;
+package iaa.paradise.paradise_server.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-
+import iaa.paradise.paradise_server.enums.UserRole;
 import java.util.Date;
 
 @Document(collection = "users")
 public class User {
-    // @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
     private String name;
+    private String username;
     private String email;
     private String phone;
     private String password;
-    private String role;
+    private UserRole role;
     private Date dob;
     private Date createdTs;
     private Date updatedTs;
+
+    public User() {
+    }
+
+    public User(String name, String username, String email, String phone, String password, Date dob) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.dob = dob;
+    }
 
     public long getId() {
         return id;
@@ -28,6 +37,14 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -62,11 +79,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -82,16 +99,15 @@ public class User {
         return createdTs;
     }
 
-    public void setCreatedTs(Date createdTs) {
-        this.createdTs = createdTs;
-    }
-
     public Date getUpdatedTs() {
         return updatedTs;
     }
 
-    public void setUpdatedTs(Date updatedTs) {
-        this.updatedTs = updatedTs;
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", name=" + name + ", username=" + username + ", email=" + email + ", phone=" + phone
+                + ", password=" + password + ", role=" + role + ", dob=" + dob + ", createdTs=" + createdTs
+                + ", updatedTs=" + updatedTs + "]";
     }
 
 }
