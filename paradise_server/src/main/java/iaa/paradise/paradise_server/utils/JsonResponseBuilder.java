@@ -1,8 +1,8 @@
 package iaa.paradise.paradise_server.utils;
 
+import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -12,7 +12,7 @@ public class JsonResponseBuilder {
     private String message;
     private Object data;
     private boolean success;
-    private Map<String, String> errors;
+    private Map<String, List<String>> errors;
     private long timeTaken;
 
     public JsonResponseBuilder setMessage(String message) {
@@ -30,7 +30,7 @@ public class JsonResponseBuilder {
         return this;
     }
 
-    public JsonResponseBuilder setErrors(Map<String, String> errors) {
+    public JsonResponseBuilder setErrors(Map<String, List<String>> errors) {
         this.errors = errors;
         return this;
     }
