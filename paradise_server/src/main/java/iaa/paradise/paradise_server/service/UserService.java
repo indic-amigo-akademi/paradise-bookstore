@@ -42,6 +42,10 @@ public class UserService implements FieldValueExists {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
+
     @Override
     public boolean fieldValueExists(String fieldName, Object value) throws UnsupportedOperationException {
         Assert.notNull(fieldName, fieldName + " must not be null.");

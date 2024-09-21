@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import iaa.paradise.paradise_server.enums.UserRole;
 import iaa.paradise.paradise_server.utils.validation.FieldValueExists;
 import iaa.paradise.paradise_server.utils.validation.Unique;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,9 +23,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Document(collection = "users")
-@PropertySource("classpath:validation.properties")
 @JsonIgnoreProperties({ "id", "createdTs", "updatedTs" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
+// @PropertySource("classpath:validation")
 public class User implements Serializable {
     @Transient
     public static final String SEQUENCE_NAME = "users_sequence";
@@ -34,26 +35,30 @@ public class User implements Serializable {
 
     private String name;
 
-    @NotBlank(message = "${validation.username.NotBlank}")
-    @Size(min = 3, max = 20, message = "${validation.username.Size}")
-    @Unique(message = "${validation.username.Unique}", service = FieldValueExists.class, fieldName = "username")
+    @NotBlank(message = "{validation.username.NotBlank}")
+    @Size(min = 3, max = 20, message = "{validation.username.Size}")
+    @Unique(message = "{validation.username.Unique}", service = FieldValueExists.class, fieldName = "username")
     private String username;
 
-    @NotBlank(message = "${validation.email.NotBlank}")
-    @Email(message = "${validation.email.Email}")
+    // @NotBlank(message = "{validation.email.NotBlank}")
+    @Email(message = "{validation.email.Email}")
+    @Unique(message = "{validation.email.Unique}", service = FieldValueExists.class, fieldName = "email")
     private String email;
 
-    @NotBlank(message = "${validation.phone.NotBlank}")
+    // @NotBlank(message = "{validation.phone.NotBlank}")
+    @Size(min = 10, max = 10, message = "{validation.phone.Size}")
+    @Digits(fraction = 0, integer = 10, message = "{validation.phone.Digits}")
+    @Unique(message = "{validation.phone.Unique}", service = FieldValueExists.class, fieldName = "phone")
     private String phone;
 
-    @NotBlank(message = "${validation.password.NotBlank}")
-    @Size(min = 8, message = "${validation.password.Size}")
+    @NotBlank(message = "{validation.password.NotBlank}")
+    @Size(min = 8, message = "{validation.password.Size}")
     private String password;
 
     private UserRole role;
 
-    @NotNull(message = "${validation.dob.NotNull}")
-    @Past(message = "${validation.dob.Past}")
+    @NotNull(message = "{validation.dob.NotNull}")
+    @Past(message = "{validation.dob.Past}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 

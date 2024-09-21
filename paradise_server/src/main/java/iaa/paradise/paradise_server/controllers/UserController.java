@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +28,7 @@ import iaa.paradise.paradise_server.service.SequenceGeneratorService;
 import iaa.paradise.paradise_server.service.UserService;
 import iaa.paradise.paradise_server.utils.JsonResponse;
 import iaa.paradise.paradise_server.utils.JsonResponseBuilder;
-import iaa.paradise.paradise_server.utils.RequestTimeInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -103,7 +100,8 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<JsonResponse> loginUser(@RequestBody String username, @RequestBody String password, HttpServletRequest request) {
+    public ResponseEntity<JsonResponse> loginUser(@RequestBody String username, @RequestBody String password,
+            HttpServletRequest request) {
         Optional<User> user = userService.getUserByUsername(username);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             // Generate JWT token
@@ -121,7 +119,9 @@ public class UserController {
     }
 
     @PostMapping("logout")
-    public JsonResponse logoutUser() {
-        return new JsonResponse();
+    public ResponseEntity<JsonResponse> logoutUser() {
+        return new ResponseEntity<>(jsonResponseBuilder
+                .setMessage("User logged out successfully")
+                .setSuccess(true).build(), HttpStatus.OK);
     }
 }
