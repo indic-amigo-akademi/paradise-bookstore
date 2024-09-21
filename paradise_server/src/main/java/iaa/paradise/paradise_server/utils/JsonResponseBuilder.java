@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Component
 @RequestScope
 public class JsonResponseBuilder {
@@ -37,6 +39,14 @@ public class JsonResponseBuilder {
 
     public JsonResponseBuilder setTimeTaken(long timeTaken) {
         this.timeTaken = timeTaken;
+        return this;
+    }
+
+    public JsonResponseBuilder updateTimeTaken(HttpServletRequest request) {
+        long startTime = (Long) request.getAttribute(RequestTimeInterceptor.REQUEST_START_TIME);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        this.timeTaken = executionTime;
         return this;
     }
 

@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonResponse {
     private String message;
     private Object data;
     private boolean success;
     private Map<String, List<String>> errors;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private long timeTaken;
 
     public JsonResponse() {
@@ -41,24 +46,5 @@ public class JsonResponse {
 
     public long getTimeTaken() {
         return timeTaken;
-    }
-
-    public Map<String, Object> toJsonMap() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", success);
-        if (message != null) {
-            map.put("message", message);
-        }
-        if (data != null) {
-            map.put("data", data);
-        }
-        if (errors != null) {
-            map.put("errors", errors);
-        }
-        if (timeTaken != 0) {
-            map.put("timeTaken", timeTaken);
-        }
-
-        return map;
     }
 }

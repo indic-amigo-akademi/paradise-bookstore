@@ -1,44 +1,60 @@
 package iaa.paradise.paradise_server.models;
 
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import iaa.paradise.paradise_server.enums.UserRole;
+import iaa.paradise.paradise_server.utils.validation.FieldValueExists;
+import iaa.paradise.paradise_server.utils.validation.Unique;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Document(collection = "users")
+@PropertySource("classpath:validation.properties")
+@JsonIgnoreProperties({ "id", "createdTs", "updatedTs" })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
     @Transient
     public static final String SEQUENCE_NAME = "users_sequence";
-    
+
     @Id
     private long id;
 
     private String name;
 
-    @NotBlank(message = "Username is mandatory.")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters.")
+    @NotBlank(message = "${validation.username.NotBlank}")
+    @Size(min = 3, max = 20, message = "${validation.username.Size}")
+    @Unique(message = "${validation.username.Unique}", service = FieldValueExists.class, fieldName = "username")
     private String username;
 
-    @NotBlank(message = "Email is mandatory.")
-    @Email(message = "Email should be valid.")
+    @NotBlank(message = "${validation.email.NotBlank}")
+    @Email(message = "${validation.email.Email}")
     private String email;
 
-    @NotBlank(message = "Phone is mandatory.")
+    @NotBlank(message = "${validation.phone.NotBlank}")
     private String phone;
 
-    @Size(min = 8, message = "Password must be at least 8 characters.")
+    @NotBlank(message = "${validation.password.NotBlank}")
+    @Size(min = 8, message = "${validation.password.Size}")
     private String password;
 
     private UserRole role;
 
-    @NotNull(message = "Date of birth is mandatory.")
+    @NotNull(message = "${validation.dob.NotNull}")
+    @Past(message = "${validation.dob.Past}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 
     private Date createdTs;

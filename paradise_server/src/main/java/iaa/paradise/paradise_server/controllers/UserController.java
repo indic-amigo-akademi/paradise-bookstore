@@ -10,18 +10,18 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import iaa.paradise.paradise_server.enums.UserRole;
 import iaa.paradise.paradise_server.models.User;
@@ -29,11 +29,14 @@ import iaa.paradise.paradise_server.service.SequenceGeneratorService;
 import iaa.paradise.paradise_server.service.UserService;
 import iaa.paradise.paradise_server.utils.JsonResponse;
 import iaa.paradise.paradise_server.utils.JsonResponseBuilder;
+import iaa.paradise.paradise_server.utils.RequestTimeInterceptor;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@PropertySource("classpath:message.properties")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -47,6 +50,9 @@ public class UserController {
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
+    @Autowired
+    private Environment env;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("all")
@@ -55,29 +61,21 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody User user,
-            BindingResult bindingResult, HttpServletResponse response) {
+    public ResponseEntity<JsonResponse> registerUser(@Valid @RequestBody User user,
+            BindingResult bindingResult, HttpServletRequest request) {
         Map<String, List<String>> errors = new HashMap<>();
         try {
             bindingResult.getFieldErrors()
                     .forEach(error -> errors.computeIfAbsent(error.getField(), k -> new ArrayList<>())
                             .add(error.getDefaultMessage()));
 
-            if (userService.getUserByUsername(user.getUsername()).isPresent()) {
-                errors.computeIfAbsent("username", k -> new ArrayList<>()).add("Username is already registered.");
-            }
-            if (userService.getUserByEmail(user.getEmail()).isPresent()) {
-                errors.computeIfAbsent("email", k -> new ArrayList<>()).add("Email is already registered.");
-            }
-
             if (!errors.isEmpty()) {
                 return new ResponseEntity<>(jsonResponseBuilder
-                        .setMessage("Validation failed!")
+                        .setMessage(env.getProperty("valid.failed"))
                         .setSuccess(false)
                         .setErrors(errors)
-                        .setTimeTaken(Long.parseLong(response.getHeader("X-Execution-Time") == null ? "0"
-                                : response.getHeader("X-Execution-Time")))
-                        .build().toJsonMap(), HttpStatus.BAD_REQUEST);
+                        .updateTimeTaken(request)
+                        .build(), HttpStatus.BAD_REQUEST);
             }
 
             // Hash the password before saving
@@ -92,27 +90,34 @@ public class UserController {
             logger.info("User created: {}", newUser);
 
             return new ResponseEntity<>(jsonResponseBuilder
-                    .setMessage("User created successfully")
-                    .setTimeTaken(Long.parseLong(response.getHeader("X-Execution-Time") == null ? "0"
-                            : response.getHeader("X-Execution-Time")))
-                    .setSuccess(true).build().toJsonMap(), HttpStatus.CREATED);
+                    .setMessage(env.getProperty("user.registered.success"))
+                    .updateTimeTaken(request)
+                    .setSuccess(true).build(), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(jsonResponseBuilder
                     .setMessage(e.getMessage())
-                    .setTimeTaken(Long.parseLong(response.getHeader("X-Execution-Time") == null ? "0"
-                            : response.getHeader("X-Execution-Time")))
-                    .setSuccess(false).build().toJsonMap(), HttpStatus.BAD_REQUEST);
+                    .updateTimeTaken(request)
+                    .setSuccess(false).build(), HttpStatus.BAD_REQUEST);
         }
 
     }
 
     @PostMapping("login")
-    public User loginUser(@RequestBody String username, @RequestBody String password) {
+    public ResponseEntity<JsonResponse> loginUser(@RequestBody String username, @RequestBody String password, HttpServletRequest request) {
         Optional<User> user = userService.getUserByUsername(username);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-            return user.get();
+            // Generate JWT token
+
+            return new ResponseEntity<>(jsonResponseBuilder
+                    .setMessage("User logged in successfully")
+                    .updateTimeTaken(request)
+                    .setSuccess(true).build(), HttpStatus.OK);
         }
-        return null;
+
+        return new ResponseEntity<>(jsonResponseBuilder
+                .setMessage("Invalid username or password")
+                .updateTimeTaken(request)
+                .setSuccess(false).build(), HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("logout")
