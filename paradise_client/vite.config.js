@@ -6,6 +6,13 @@ console.log("Project Dir: ", path.dirname(__dirname));
 
 export default defineConfig({
     base: "/",
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: "modern-compiler" // or "modern"
+            }
+        }
+    },
     define: {
         "process.env.PUBLIC_URL": JSON.stringify(
             process.env.NODE_ENV === "production" ? "https://paradise-store.com/" : "http://localhost:5050/"
