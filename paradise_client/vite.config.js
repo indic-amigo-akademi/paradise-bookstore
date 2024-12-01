@@ -27,6 +27,19 @@ export default defineConfig({
         }
     },
     build: {
-        outDir: path.join(path.dirname(__dirname), "paradise_server", "src", "main", "resources", "dist")
+        outDir: path.join(path.dirname(__dirname), "paradise_server", "src", "main", "resources", "dist"),
+        rollupOptions: {
+            output: {
+                manualChunks: (id) => {
+                    if (id.includes("@mui")) {
+                        return "mui";
+                    }
+                    if (id.includes("node_modules")) {
+                        return "vendor";
+                    }
+                }
+            }
+        },
+        chunkSizeWarningLimit: 2000
     }
 });

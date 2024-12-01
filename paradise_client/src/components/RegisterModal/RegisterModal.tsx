@@ -1,63 +1,10 @@
-import React, { ChangeEventHandler, Component } from "react";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import React, { Component } from "react";
 
-import {
-    Box,
-    Button,
-    IconButton,
-    InputAdornment,
-    Modal,
-    Step,
-    StepLabel,
-    Stepper,
-    TextField,
-    TextFieldProps,
-    Typography
-} from "@mui/material";
-import { VisibilityOutlined as Visibility, VisibilityOffOutlined as VisibilityOff } from "@mui/icons-material";
-import moment, { Moment } from "moment";
+import { Box, Button, Modal, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { getFormField, FormFieldErrorType, FormFieldStateType } from "@/utils/FormField";
+import { Dayjs } from "dayjs";
 
-interface PasswordFieldState {
-    showPassword: boolean;
-}
-
-class PasswordField extends Component<TextFieldProps, PasswordFieldState> {
-    state = {
-        showPassword: false
-    };
-
-    handleClickShowPassword() {
-        this.setState({
-            showPassword: !this.state.showPassword
-        });
-    }
-
-    render() {
-        const { ...otherProps } = this.props;
-        return (
-            <TextField
-                {...otherProps}
-                type={this.state.showPassword ? "text" : "password"}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="Toggle password visibility"
-                                onClick={this.handleClickShowPassword.bind(this)}
-                            >
-                                {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                        </InputAdornment>
-                    )
-                }}
-            />
-        );
-    }
-}
-
-interface RegisterModalFormError {
+interface RegisterModalFormError extends FormFieldErrorType {
     name: Array<string>;
     username: Array<string>;
     email: Array<string>;
@@ -65,13 +12,13 @@ interface RegisterModalFormError {
     confirmPassword: Array<string>;
     dob: Array<string>;
 }
-interface RegisterModalState {
+interface RegisterModalState extends FormFieldStateType {
     name: string;
     username: string;
     email: string;
     password: string;
     confirmPassword: string;
-    dob: Date | null;
+    dob: Dayjs | null;
     currentStep: number;
     errors: RegisterModalFormError;
     isLoading: boolean;
@@ -112,7 +59,7 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                 confirmPassword: [],
                 dob: []
             },
-            dobString = moment(this.state.dob).format("YYYY-MM-DD");
+            dobString = this.state.dob ? this.state.dob.format("YYYY-MM-DD") : "";
         let currentStep = 2;
         formData.append("name", this.state.name);
         formData.append("username", this.state.username);
@@ -129,20 +76,18 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
         })
             .then((response) => response.json())
             .then((resJson) => {
-                console.log(resJson);
+                // console.log(resJson);
                 if (resJson.success) {
                     this.props.toggleOpen(false);
                 } else {
                     for (const key in resJson.message) {
-                        if (Object.prototype.hasOwnProperty.call(resJson.message, key)) {
-                            newErrors[key as keyof RegisterModalFormError].push(
-                                ...resJson.message[key as keyof RegisterModalFormError]
-                            );
-                        }
-                        if (["name", "dob", "email"].includes(key as keyof RegisterModalFormError))
-                            currentStep = currentStep < 0 ? currentStep : 0;
-                        if (["username", "password"].includes(key as keyof RegisterModalFormError))
-                            currentStep = currentStep < 1 ? currentStep : 1;
+                        // if (Object.prototype.hasOwnProperty.call(resJson.message, key)) {
+                        newErrors[key as keyof RegisterModalFormError].push(
+                            ...resJson.message[key as keyof RegisterModalFormError]
+                        );
+                        // }
+                        if (["name", "dob", "email"].includes(key)) currentStep = currentStep < 0 ? currentStep : 0;
+                        if (["username", "password"].includes(key)) currentStep = currentStep < 1 ? currentStep : 1;
                     }
                     this.setState({ errors: newErrors, currentStep });
                 }
@@ -153,9 +98,8 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
     }
 
     validateFormStep() {
-        const emailRegex: RegExp = new RegExp(
-                '^(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$'
-            ),
+        const emailRegex: RegExp =
+                /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/,
             newErrors: RegisterModalFormError = {
                 name: [],
                 username: [],
@@ -185,8 +129,11 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                     newErrors.email.push("Email is invalid");
                 }
 
-                this.setState({
-                    errors: newErrors
+                this.setState((prevState) => {
+                    return {
+                        ...prevState,
+                        errors: newErrors
+                    };
                 });
 
                 return newErrors.dob.length === 0 && newErrors.name.length === 0 && newErrors.email.length === 0;
@@ -212,8 +159,11 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                     newErrors.confirmPassword.push("Confirm password should be the same as password");
                 }
 
-                this.setState({
-                    errors: newErrors
+                this.setState((prevState) => {
+                    return {
+                        ...prevState,
+                        errors: newErrors
+                    };
                 });
 
                 return (
@@ -308,100 +258,9 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                     <Box sx={{ marginTop: 1 }}>
                         {this.state.currentStep < steps.length ? (
                             <>
-                                {steps[this.state.currentStep].fields.map((field, j) => {
-                                    if (field.type === "date")
-                                        return (
-                                            <LocalizationProvider dateAdapter={AdapterMoment} key={j}>
-                                                <DatePicker
-                                                    label={field.label}
-                                                    value={this.state.dob as Moment | null}
-                                                    format="DD-MM-YYYY"
-                                                    onChange={(dob: Moment | null) => {
-                                                        this.setState({
-                                                            ...this.state,
-                                                            dob: dob ? dob.toDate() : null
-                                                        });
-                                                    }}
-                                                    slots={{
-                                                        textField: TextField
-                                                    }}
-                                                    slotProps={{
-                                                        textField: {
-                                                            helperText:
-                                                                this.state.errors.dob.length > 0
-                                                                    ? this.state.errors.dob[0]
-                                                                    : "",
-                                                            error: this.state.errors.dob.length > 0,
-                                                            fullWidth: true,
-                                                            sx: {
-                                                                marginTop: 2
-                                                            }
-                                                        }
-                                                    }}
-                                                />
-                                            </LocalizationProvider>
-                                        );
-                                    if (field.type === "password")
-                                        return (
-                                            <PasswordField
-                                                sx={{
-                                                    width: "100%",
-                                                    marginTop: 2
-                                                }}
-                                                key={j}
-                                                label={field.label}
-                                                name={field.name}
-                                                autoComplete={field.autocomplete}
-                                                value={this.state[field.name as keyof RegisterModalState]}
-                                                error={
-                                                    this.state.errors[field.name as keyof RegisterModalFormError]
-                                                        .length > 0
-                                                }
-                                                helperText={
-                                                    this.state.errors[field.name as keyof RegisterModalFormError]
-                                                        .length > 0
-                                                        ? this.state.errors[
-                                                              field.name as keyof RegisterModalFormError
-                                                          ][0]
-                                                        : ""
-                                                }
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                                    this.setState({
-                                                        ...this.state,
-                                                        [field.name as keyof RegisterModalState]: event.target.value
-                                                    })
-                                                }
-                                            />
-                                        );
-                                    return (
-                                        <TextField
-                                            sx={{
-                                                width: "100%",
-                                                marginTop: 2
-                                            }}
-                                            key={j}
-                                            label={field.label}
-                                            name={field.name}
-                                            autoComplete={field.autocomplete}
-                                            type={field.type}
-                                            value={this.state[field.name as keyof RegisterModalState]}
-                                            error={
-                                                this.state.errors[field.name as keyof RegisterModalFormError].length > 0
-                                            }
-                                            helperText={
-                                                this.state.errors[field.name as keyof RegisterModalFormError].length > 0
-                                                    ? this.state.errors[field.name as keyof RegisterModalFormError][0]
-                                                    : ""
-                                            }
-                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                                                this.setState({
-                                                    ...this.state,
-                                                    [field.name as keyof RegisterModalState]: event.target.value
-                                                })
-                                            }
-                                        />
-                                    );
-                                })}
+                                {steps[this.state.currentStep].fields.map((field, j) =>
+                                    getFormField(field, this.state, (state) => this.setState(state), j)
+                                )}
                             </>
                         ) : (
                             <Typography sx={{ textAlign: "center" }}>Click on Submit to create your account</Typography>
@@ -416,8 +275,8 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                             color="primary"
                             disabled={this.state.currentStep === 0}
                             onClick={() => {
-                                this.setState({
-                                    currentStep: this.state.currentStep - 1
+                                this.setState((prevState) => {
+                                    return { currentStep: prevState.currentStep - 1 };
                                 });
                             }}
                         >
@@ -431,7 +290,9 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                                     if (!this.validateFormStep()) {
                                         return;
                                     }
-                                    this.setState({ currentStep: this.state.currentStep + 1 });
+                                    this.setState((prevState) => {
+                                        return { currentStep: prevState.currentStep + 1 };
+                                    });
                                 }}
                             >
                                 Next
