@@ -61,12 +61,6 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
             },
             dobString = this.state.dob ? this.state.dob.format("YYYY-MM-DD") : "";
         let currentStep = 2;
-        // const formData = new FormData();
-        // formData.append("name", this.state.name);
-        // formData.append("username", this.state.username);
-        // formData.append("email", this.state.email);
-        // formData.append("password", this.state.password);
-        // formData.append("dob", dobString);
 
         axios
             .post("/auth/register", {
@@ -82,11 +76,9 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                     this.props.toggleOpen(false);
                 } else {
                     for (const key in res_json.message) {
-                        // if (Object.prototype.hasOwnProperty.call(resJson.message, key)) {
                         newErrors[key as keyof RegisterModalFormError].push(
                             ...res_json.message[key as keyof RegisterModalFormError]
                         );
-                        // }
                         if (["name", "dob", "email"].includes(key)) currentStep = currentStep < 0 ? currentStep : 0;
                         if (["username", "password"].includes(key)) currentStep = currentStep < 1 ? currentStep : 1;
                     }
