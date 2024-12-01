@@ -55,6 +55,7 @@ logs
 
 node_modules
 bower_components
+package-lock.json
 
 *.sublime*
 
@@ -63,3 +64,7 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,react
+.idea
+.mvn
+.vscode
+dist

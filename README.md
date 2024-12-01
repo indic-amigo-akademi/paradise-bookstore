@@ -6,27 +6,27 @@
 
 - For backend
 
-  - Move into paradise/paradise_server
+    - Move into paradise/paradise_server
   
    `cd paradise_server`
 
-  - Install dependencies
+    - Install dependencies
 
     `mvn clean install`
 
-  - Run the server
+    - Run the server
 
     `mvn exec:java -Dexec.mainClass=com.iaa.paradise_server.ParadiseApplication`
 
 - For frontend
-  - Move into paradise/paradise-client
+    - Move into paradise/paradise-client
 
     `cd paradise-client`
   
-  - Install dependencies
+    - Install dependencies
 
     `npm install`
 
-  - Run the server
+    - Run the server
 
     `npm start`
