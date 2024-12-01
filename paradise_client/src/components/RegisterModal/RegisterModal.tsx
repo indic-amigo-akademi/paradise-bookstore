@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Box, Button, Modal, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { getFormField, FormFieldErrorType, FormFieldStateType } from "@/utils/FormField";
 import { Dayjs } from "dayjs";
+import axios from "axios";
 
 interface RegisterModalFormError extends FormFieldErrorType {
     name: Array<string>;
@@ -50,8 +51,7 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
 
     handleFormSubmit() {
         console.log("Register form submitted!");
-        const formData = new FormData(),
-            newErrors: RegisterModalFormError = {
+        const newErrors: RegisterModalFormError = {
                 name: [],
                 username: [],
                 email: [],
@@ -61,29 +61,30 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
             },
             dobString = this.state.dob ? this.state.dob.format("YYYY-MM-DD") : "";
         let currentStep = 2;
-        formData.append("name", this.state.name);
-        formData.append("username", this.state.username);
-        formData.append("email", this.state.email);
-        formData.append("password", this.state.password);
-        formData.append("dob", dobString);
+        // const formData = new FormData();
+        // formData.append("name", this.state.name);
+        // formData.append("username", this.state.username);
+        // formData.append("email", this.state.email);
+        // formData.append("password", this.state.password);
+        // formData.append("dob", dobString);
 
-        fetch("/auth/register", {
-            method: "POST",
-            headers: {
-                // 'Content-Type': 'multipart/form-data',
-            },
-            body: formData
-        })
-            .then((response) => response.json())
-            .then((resJson) => {
-                // console.log(resJson);
-                if (resJson.success) {
+        axios
+            .post("/auth/register", {
+                name: this.state.name,
+                username: this.state.username,
+                email: this.state.email,
+                password: this.state.password,
+                dob: dobString
+            })
+            .then((res) => res.data)
+            .then((res_json) => {
+                if (res_json.success) {
                     this.props.toggleOpen(false);
                 } else {
-                    for (const key in resJson.message) {
+                    for (const key in res_json.message) {
                         // if (Object.prototype.hasOwnProperty.call(resJson.message, key)) {
                         newErrors[key as keyof RegisterModalFormError].push(
-                            ...resJson.message[key as keyof RegisterModalFormError]
+                            ...res_json.message[key as keyof RegisterModalFormError]
                         );
                         // }
                         if (["name", "dob", "email"].includes(key)) currentStep = currentStep < 0 ? currentStep : 0;
@@ -282,7 +283,7 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                         >
                             Back
                         </Button>
-                        {this.state.currentStep < steps.length && (
+                        {this.state.currentStep < steps.length - 1 && (
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -298,7 +299,7 @@ export default class RegisterModal extends Component<RegisterModalProps, Registe
                                 Next
                             </Button>
                         )}
-                        {this.state.currentStep === steps.length && (
+                        {this.state.currentStep === steps.length - 1 && (
                             <Button
                                 variant="contained"
                                 color="primary"
